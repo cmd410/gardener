@@ -1,9 +1,11 @@
-from dotenv import load_dotenv
+
 from os import getenv
+
 from gevent import spawn
-from tapi import *
+from dotenv import load_dotenv
 
 from insect import call_insect
+from tapi import *
 
 load_dotenv()
 
