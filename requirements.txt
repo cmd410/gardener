@@ -1,0 +1,7 @@
+cffi==1.14.3
+gevent==20.9.0
+greenlet==0.4.17
+pycparser==2.20
+python-dotenv==0.14.0
+zope.event==4.5.0
+zope.interface==5.1.0
