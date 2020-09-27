@@ -7,6 +7,9 @@ from gevent import socket, ssl, sleep
 api_url = 'https://api.telegram.org/bot{token}/{method}'
 
 
+class APIError(Exception): pass
+
+
 def decode_json_body(body: bytes) -> SimpleNamespace:
     try:
         json_data = json.loads(body.decode())
@@ -52,4 +55,6 @@ def make_request(token: str, method: str, body=None) -> SimpleNamespace:
             data: bytes = ssl_socket.recv(1024*7000)
             headers, body = data.split(b'\r\n'*2, maxsplit=1)
             decoded_data: SimpleNamespace = decode_json_body(body)
+            if not decoded_data.ok:
+                raise APIError(f'[{decoded_data.error_code}] {decoded_data.description}')
             return decoded_data
