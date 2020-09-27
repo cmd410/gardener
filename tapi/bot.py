@@ -1,3 +1,4 @@
+from logging import getLogger
 from functools import wraps
 from types import SimpleNamespace
 
@@ -5,9 +6,12 @@ import gevent
 
 from .request import make_request
 
+logger = getLogger('bot')
+
 
 def bot(token):
     def send_message(**kwargs):
+        logger.debug(f'Sending message: {kwargs.get("text", "")}')
         return  make_request(token, 'sendMessage', kwargs)
 
     def get_updates(**kwargs):

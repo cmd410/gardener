@@ -32,7 +32,7 @@ def handle_message(bot, update):
     if (msg := update.message):
         text = msg.text
         formated_text = "\n\t".join(msg.text.split("\n"))
-        logger.info(f'Message from {msg.from_user.first_name}:\n\t{formated_text}')
+        logger.debug(f'Message:\n\t{formated_text}')
         if text.startswith('/'):
             if text.strip() == '/start':
                 reply = 'Hello, Im CompXbot\\! I can calculate various things for you using [insect](https://github.com/sharkdp/insect)\\!\n\n'
@@ -58,6 +58,7 @@ def handle_inline(bot, update):
         text = query.query
         if not text:
             return
+        logger.debug(f'Inline query: {text}')
         answer = call_insect(text)
         ires = make_responce(f'{text} = {answer}')
         result = bot.answer_inline(
@@ -68,7 +69,7 @@ def handle_inline(bot, update):
 @bot(getenv('TOKEN'))
 def mainloop(bot):
     logger.info('Bot started.')
-    for updates in bot.updates(timeout=15):
+    for updates in bot.updates(timeout=60):
         for update in updates:
             handle_message(bot, update)
             handle_inline(bot, update)
