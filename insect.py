@@ -1,19 +1,19 @@
+from string import ascii_lowercase
 from shutil import which
+from logging import getLogger
 
 from gevent.subprocess import Popen, PIPE
 
 executable = which('insect')
 
-math_signs = '+-*^ .'
+logger = getLogger('insect')
 
 def call_insect(inpt:str):
-    test_inpt = inpt
-    for i in math_signs:
-        test_inpt = test_inpt.replace(i, '')
-    if test_inpt.isdigit():
+    if not set(inpt.lower()).intersection(set(ascii_lowercase)):
         return eval(inpt)
     
     if not executable:
+        logger.error('Insect is not installed!')
         return 'Insect was not found'
 
     process = Popen(
@@ -23,4 +23,5 @@ def call_insect(inpt:str):
         stderr=PIPE,
         encoding='utf-8')
     result = process.communicate(inpt+'\n')
+    
     return result[0] or result[1]
