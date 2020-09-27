@@ -31,7 +31,6 @@ def decode_json_body(body: bytes) -> SimpleNamespace:
 
 
 def make_request(token: str, method: str, body=None) -> SimpleNamespace:
-    timeout = 5
     request_url = api_url.format(method=method, token=token)
     host = api_url[8:api_url.find('/bot')]
     path = request_url[request_url.find('/bot'):]
@@ -42,8 +41,6 @@ def make_request(token: str, method: str, body=None) -> SimpleNamespace:
         body_data = json.dumps(body)
         s += f'Content-Length: {len(body_data)}\r\n'
         s += 'Content-Type: application/json; charset=utf-8\r\n'
-        if 'timeout' in body:
-            timeout += body['timeout']
     else:
         body_data = ''
     
