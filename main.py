@@ -1,5 +1,6 @@
-
+from logging import getLogger, StreamHandler, basicConfig, DEBUG
 from os import getenv
+from hashlib import blake2b
 
 from gevent import spawn
 from dotenv import load_dotenv
@@ -9,12 +10,15 @@ from tapi import *
 
 load_dotenv()
 
+logger = getLogger('MAIN')
+
+
 def make_responce(text):
-    print('text =', text)
+    thash = blake2b(text.encode(), digest_size=32).hexdigest()
     return [
         {
             'type': 'article',
-            'id': text,
+            'id': thash,
             'title': text,
             'input_message_content': {
                 'message_text': text
@@ -27,6 +31,7 @@ def make_responce(text):
 def handle_message(bot, update):
     if (msg := update.message):
         text = msg.text
+        logger.info(f'Message from {msg.from_user.first_name}: {msg.text}')
         if text.startswith('/'):
             if text.strip() == '/start':
                 reply = 'Hello, Im CompXbot\\! I can calculate various things for you using [insect](https://github.com/sharkdp/insect)\\!\n\n'
@@ -40,7 +45,8 @@ def handle_message(bot, update):
                     parse_mode='MarkdownV2'
                     )
             return
-        bot.send_message(chat_id=msg.chat.id, text=call_insect(text))
+        answer = call_insect(text)
+        bot.send_message(chat_id=msg.chat.id, text=answer)
 
 
 @greenlet
@@ -51,7 +57,8 @@ def handle_inline(bot, update):
         text = query.query
         if not text:
             return
-        ires = make_responce(f'{text} = {call_insect(text)}')
+        answer = call_insect(text)
+        ires = make_responce(f'{text} = {answer}')
         result = bot.answer_inline(
             inline_query_id=qid,
             results=ires
@@ -59,6 +66,7 @@ def handle_inline(bot, update):
 
 @bot(getenv('TOKEN'))
 def mainloop(bot):
+    logger.info('Bot started.')
     for updates in bot.updates(timeout=15):
         for update in updates:
             handle_message(bot, update)
@@ -66,4 +74,11 @@ def mainloop(bot):
 
 
 if __name__ == '__main__':
+    try:
+        from rich.logging import RichHandler
+        handler = RichHandler(level=DEBUG)
+    except ImportError:
+        handler = StreamHandler()
+
+    basicConfig(level=DEBUG,handlers=[handler], format='%(message)s')
     mainloop()
