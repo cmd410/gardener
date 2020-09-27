@@ -4,7 +4,14 @@ from gevent.subprocess import Popen, PIPE
 
 executable = which('insect')
 
+math_signs = '+-*^ .'
+
 def call_insect(inpt:str):
+    test_inpt = inpt
+    for i in math_signs:
+        test_inpt = test_inpt.replace(i, '')
+    if test_inpt.isdigit():
+        return eval(inpt)
     if executable:
         result = Popen([executable, inpt], stdout=PIPE, stderr=PIPE, encoding='utf-8').communicate()
         return result[0] or result[1]
