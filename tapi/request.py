@@ -19,7 +19,10 @@ def decode_json_body(body: bytes) -> SimpleNamespace:
 
     def namespacify(obj):
         if isinstance(obj, dict):
-            for key, value in obj.items():
+            for key, value in list(obj.items()):
+                if key == 'from':
+                    obj['from_user'] = namespacify(obj.pop('from'))
+                    continue
                 obj[key] = namespacify(value)
             return SimpleNamespace(**obj)
         elif isinstance(obj, list):
