@@ -27,9 +27,10 @@ def handle_message(bot, update):
         text = msg.text
         if text.startswith('/'):
             if text.strip() == '/start':
-                reply = 'Hello, Im insectbot\\! I can calculate various things for you with [insect](https://github.com/sharkdp/insect)\\!\n\n'
+                reply = 'Hello, Im CompXbot\\! I can calculate various things for you using [insect](https://github.com/sharkdp/insect)\\!\n\n'
                 reply += 'Just send me some math expression and feel free to use units\\.\n'
                 reply += 'I can also work inline, but won\'t recomend that for large expressions\\.'
+                reply += '\n\n[Source code](https://github.com/cmd410/gardener)'
                 bot.send_message(
                     chat_id=msg.chat.id,
                     text=reply,
