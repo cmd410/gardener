@@ -31,7 +31,8 @@ def make_responce(text):
 def handle_message(bot, update):
     if (msg := update.message):
         text = msg.text
-        logger.info(f'Message from {msg.from_user.first_name}: {msg.text}')
+        formated_text = "\n\t".join(msg.text.split("\n"))
+        logger.info(f'Message from {msg.from_user.first_name}:\n\t{formated_text}')
         if text.startswith('/'):
             if text.strip() == '/start':
                 reply = 'Hello, Im CompXbot\\! I can calculate various things for you using [insect](https://github.com/sharkdp/insect)\\!\n\n'
@@ -77,8 +78,10 @@ if __name__ == '__main__':
     try:
         from rich.logging import RichHandler
         handler = RichHandler(level=DEBUG)
+        formater = '%(message)s'
     except ImportError:
         handler = StreamHandler()
+        formater = '[%(asctime)s] [%(levelname)s]\n%(message)s\n'
 
-    basicConfig(level=DEBUG,handlers=[handler], format='%(message)s')
+    basicConfig(level=DEBUG,handlers=[handler], format=formater)
     mainloop()
