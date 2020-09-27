@@ -24,7 +24,20 @@ def make_responce(text):
 @ignore_exc(AttributeError)
 def handle_message(bot, update):
     if (msg := update.message):
-        bot.send_message(chat_id=msg.chat.id, text=call_insect(msg.text))
+        text = msg.text
+        if text.startswith('/'):
+            if text.strip() == '/start':
+                reply = 'Hello, Im insectbot\\! I can calculate various things for you with [insect](https://github.com/sharkdp/insect)\\!\n\n'
+                reply += 'Just send me some math expression and feel free to use units\\.\n'
+                reply += 'I can also work inline, but won\'t recomend that for large expressions\\.'
+                bot.send_message(
+                    chat_id=msg.chat.id,
+                    text=reply,
+                    disable_web_page_preview=True,
+                    parse_mode='MarkdownV2'
+                    )
+            return
+        bot.send_message(chat_id=msg.chat.id, text=call_insect(text))
 
 
 @greenlet
@@ -47,6 +60,7 @@ def mainloop(bot):
         for update in updates:
             handle_message(bot, update)
             handle_inline(bot, update)
+
 
 if __name__ == '__main__':
     mainloop()
