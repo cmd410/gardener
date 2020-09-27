@@ -1,7 +1,11 @@
 from functools import wraps
 from types import SimpleNamespace
+from logging import getLogger
 
 from gevent import spawn
+
+
+logger = getLogger('util')
 
 
 def ignore_exc(*exc, msg=None):
@@ -11,10 +15,10 @@ def ignore_exc(*exc, msg=None):
             result = None
             try:
                 result = func(*args, **kwargs)
+                return result
             except exc as error:
                 if msg is not None:
-                    print(msg)
-            return result
+                    logger.exception(msg+'\n')
         return wrapper
     return decorator
 
