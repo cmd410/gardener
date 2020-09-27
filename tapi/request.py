@@ -46,7 +46,7 @@ def make_request(token: str, method: str, body=None) -> SimpleNamespace:
     
     s += f'\r\n'
     s += body_data
-    with socket.create_connection((host, 443), timeout=timeout) as tcp_socket:
+    with socket.create_connection((host, 443)) as tcp_socket:
         with ssl.wrap_socket(tcp_socket) as ssl_socket:
             ssl_socket.send(s.encode())
             data: bytes = ssl_socket.recv(1024*7000)

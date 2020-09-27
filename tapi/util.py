@@ -1,16 +1,19 @@
 from functools import wraps
-from contextlib import suppress
 from types import SimpleNamespace
 
 from gevent import spawn
 
 
-def ignore_exc(*exc):
+def ignore_exc(*exc, msg=None):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            with suppress(*exc):
+            result = None
+            try:
                 result = func(*args, **kwargs)
+            except exc as error:
+                if msg is not None:
+                    print(msg)
             return result
         return wrapper
     return decorator

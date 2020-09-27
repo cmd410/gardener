@@ -15,6 +15,10 @@ def bot(token):
         updates = responce.result
         return updates
     
+    def answer_inline(**kwargs):
+        responce = make_request(token, 'answerInlineQuery', kwargs)
+        return responce
+
     def updates(**kwargs):
         modified_kwargs = {'timeout': 30}
         modified_kwargs.update(**kwargs)
@@ -30,7 +34,8 @@ def bot(token):
     bot = SimpleNamespace(
         send_message=send_message,
         get_updates=get_updates,
-        updates=updates
+        updates=updates,
+        answer_inline=answer_inline
         )
     
     def decorator(func):
