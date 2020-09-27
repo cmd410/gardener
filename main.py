@@ -30,24 +30,33 @@ def make_responce(text):
 @ignore_exc(AttributeError)
 def handle_message(bot, update):
     if (msg := update.message):
+        
         text = msg.text
-        formated_text = "\n\t".join(msg.text.split("\n"))
-        logger.debug(f'Message:\n\t{formated_text}')
+        indented_text = "\n\t".join(msg.text.split("\n"))
+        logger.debug(f'Message:\n\t{indented_text}')
+        
         if text.startswith('/'):
             if text.strip() == '/start':
-                reply = 'Hello, Im CompXbot\\! I can calculate various things for you using [insect](https://github.com/sharkdp/insect)\\!\n\n'
+                
+                reply = 'Hello, Im CompXbot\\! '
+                reply +='I can calculate various things for you using '
+                reply += '[insect](https://github.com/sharkdp/insect)\\!\n\n'
                 reply += 'Just send me some math expression and feel free to use units\\.\n'
                 reply += 'I can also work inline, but won\'t recomend that for large expressions\\.'
                 reply += '\n\n[Source code](https://github.com/cmd410/gardener)'
+                
                 bot.send_message(
                     chat_id=msg.chat.id,
                     text=reply,
                     disable_web_page_preview=True,
                     parse_mode='MarkdownV2'
                     )
-            return
-        answer = call_insect(text)
-        bot.send_message(chat_id=msg.chat.id, text=answer)
+        else:
+            answer = call_insect(text)
+            bot.send_message(
+                chat_id=msg.chat.id,
+                text=answer
+                )
 
 
 @greenlet
@@ -59,9 +68,9 @@ def handle_inline(bot, update):
         if not text:
             return
         logger.debug(f'Inline query: {text}')
-        answer = call_insect(text)
-        ires = make_responce(f'{text} = {answer}')
-        result = bot.answer_inline(
+        
+        answer = make_responce(f'{text} = {call_insect(text)}')
+        bot.answer_inline(
             inline_query_id=qid,
             results=ires
         )

@@ -22,6 +22,7 @@ def call_insect(inpt:str):
         stdout=PIPE,
         stderr=PIPE,
         encoding='utf-8')
+
     result = process.communicate(inpt+'\n')
-    
+
     return result[0] or result[1]
