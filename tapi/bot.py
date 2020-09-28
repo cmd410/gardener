@@ -12,8 +12,7 @@ logger = getLogger('bot')
 def bot(token):
     def send_message(**kwargs):
         text = kwargs.get("text", "")
-        logger.debug(f'''Sending message: {
-            text[:32] + "..." if len(text) > 64 else ""}''')
+        logger.debug(f'''Sending message: {text}''')
 
         return  make_request(token, 'sendMessage', kwargs).get()
 
