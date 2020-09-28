@@ -16,6 +16,10 @@ def call_insect(inpt:str):
         logger.error('Insect is not installed!')
         return 'Insect was not found'
 
+    if any([len(i) > (72 * 3)
+            for i in inpt.split('\n')]):
+        return 'Lines too long, not allowed!'
+
     process = Popen(
         [executable],
         stdin=PIPE,
