@@ -72,7 +72,7 @@ def handle_inline(bot, update):
         answer = make_responce(f'{text} = {call_insect(text)}')
         bot.answer_inline(
             inline_query_id=qid,
-            results=ires
+            results=answer
         )
 
 @bot(getenv('TOKEN'))
