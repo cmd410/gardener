@@ -13,13 +13,13 @@ load_dotenv()
 logger = getLogger('MAIN')
 
 
-def make_responce(text):
+def make_responce(title, text):
     thash = blake2b(text.encode(), digest_size=32).hexdigest()
     return [
         {
             'type': 'article',
             'id': thash,
-            'title': text,
+            'title': title,
             'input_message_content': {
                 'message_text': text
             }
@@ -55,7 +55,8 @@ def handle_message(bot, update):
             answer = call_insect(text)
             bot.send_message(
                 chat_id=msg.chat.id,
-                text=answer
+                text=answer,
+                reply_to_message_id=msg.message_id
                 )
 
 
@@ -69,10 +70,11 @@ def handle_inline(bot, update):
             return
         logger.debug(f'Inline query: {text}')
         
-        answer = make_responce(f'{text} = {call_insect(text)}')
+        answer = call_insect(text)
+        responce = make_responce(answer, f'{text} = {answer}')
         bot.answer_inline(
             inline_query_id=qid,
-            results=answer
+            results=responce
         )
 
 @bot(getenv('TOKEN'))
