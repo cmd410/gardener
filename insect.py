@@ -1,4 +1,3 @@
-from string import ascii_lowercase
 from shutil import which
 from logging import getLogger
 
@@ -8,10 +7,8 @@ executable = which('insect')
 
 logger = getLogger('insect')
 
+
 def call_insect(inpt:str):
-    if not set(inpt.lower()).intersection(set(ascii_lowercase)):
-        return eval(inpt)
-    
     if not executable:
         logger.error('Insect is not installed!')
         return 'Insect was not found'
