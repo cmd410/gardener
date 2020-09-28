@@ -56,7 +56,7 @@ def make_request(token: str, method: str, body=None) -> SimpleNamespace:
     
     with socket.create_connection((host, 443)) as tcp_socket:
         with ssl.wrap_socket(tcp_socket) as ssl_socket:
-            ssl_socket.send(request.encode())
+            ssl_socket.sendall(request.encode())
             data: bytes = b''
             
             # Reading headers
