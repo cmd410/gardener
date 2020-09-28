@@ -11,16 +11,19 @@ logger = getLogger('bot')
 
 def bot(token):
     def send_message(**kwargs):
-        logger.debug(f'Sending message: {kwargs.get("text", "")}')
-        return  make_request(token, 'sendMessage', kwargs)
+        text = kwargs.get("text", "")
+        logger.debug(f'''Sending message: {
+            text[:32] + "..." if len(text) > 64 else ""}''')
+
+        return  make_request(token, 'sendMessage', kwargs).get()
 
     def get_updates(**kwargs):
-        responce = make_request(token, 'getUpdates', kwargs)
+        responce = make_request(token, 'getUpdates', kwargs).get()
         updates = responce.result
         return updates
     
     def answer_inline(**kwargs):
-        responce = make_request(token, 'answerInlineQuery', kwargs)
+        responce = make_request(token, 'answerInlineQuery', kwargs).get()
         return responce
 
     def updates(**kwargs):
