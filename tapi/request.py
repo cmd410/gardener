@@ -3,6 +3,8 @@ from types import SimpleNamespace
 
 from gevent import socket, ssl, sleep
 
+from .util import greenlet
+
 
 api_url = 'https://api.telegram.org/bot{token}/{method}'
 
@@ -33,6 +35,7 @@ def decode_json_body(body: bytes) -> SimpleNamespace:
     return namespacify(json_data)
 
 
+@greenlet
 def make_request(token: str, method: str, body=None) -> SimpleNamespace:
     request_url = api_url.format(method=method, token=token)
     host = api_url[8:api_url.find('/bot')]
