@@ -1,5 +1,5 @@
 cffi==1.14.3
-gevent==20.9.0
+gevent==23.9.1
 greenlet==0.4.17
 pycparser==2.20
 python-dotenv==0.14.0
