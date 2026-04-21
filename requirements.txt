@@ -2,6 +2,6 @@ cffi==1.14.3
 gevent==23.9.1
 greenlet==0.4.17
 pycparser==2.20
-python-dotenv==0.14.0
+python-dotenv==1.2.2
 zope.event==4.5.0
 zope.interface==5.1.0
